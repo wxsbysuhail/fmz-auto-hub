@@ -35,5 +35,9 @@ if (mainCss) {
 // Replace the raw source path with the compiled asset path
 html = html.replace("/src/main.tsx", `/assets/${indexJs}`);
 
-fs.writeFileSync(path.join(clientDist, "index.html"), html);
-console.log("🚀 index.html fully wired and deployed to dist/client!");
+fs.writeFileSync(path.join(clientDist, "index.html"), html, { flag: "w" });
+const finalSize = fs.statSync(path.join(clientDist, "index.html")).size;
+console.log(`🚀 index.html fully wired! Size: ${finalSize} bytes`);
+console.log("------------------------------------------");
+console.log(html); // Print content to build logs for verification
+console.log("------------------------------------------");
