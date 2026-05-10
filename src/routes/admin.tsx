@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
-import { Wrench, Car, Calendar as CalIcon, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Wrench, Car, Calendar as CalIcon, TrendingUp, ChevronLeft, ChevronRight, MessageCircle, QrCode, Printer } from "lucide-react";
 import { format, isSameDay, isSameMonth, startOfMonth } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { QRCodeSVG } from "qrcode.react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
