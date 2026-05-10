@@ -321,3 +321,75 @@ function Info({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function statusMessage(b: Booking): string {
+  const map: Record<Status, string> = {
+    "Booking Confirmed": `your booking for the ${b.make} ${b.model} (${b.plate}) is confirmed.`,
+    "Vehicle in Garage": `we've received your ${b.make} ${b.model} (${b.plate}) at the workshop.`,
+    "Diagnosing": `our team is diagnosing your ${b.make} ${b.model} (${b.plate}) right now.`,
+    "Waiting on Parts": `we're waiting on parts for your ${b.make} ${b.model} (${b.plate}). We'll keep you posted.`,
+    "In Repair": `your ${b.make} ${b.model} (${b.plate}) is now in active repair.`,
+    "Ready for Pickup": `great news — your ${b.make} ${b.model} (${b.plate}) is ready for pickup!`,
+  };
+  return `Hi ${b.clientName}, this is FMZ Auto. Update on ref ${b.id}: ${map[b.status]}`;
+}
+
+function WhatsAppButton({ booking }: { booking: Booking }) {
+  const send = () => {
+    const msg = statusMessage(booking);
+    const phone = (booking.phone ?? "").replace(/[^\d]/g, "");
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    if (typeof window !== "undefined") {
+      try { window.open(url, "_blank", "noopener,noreferrer"); } catch {}
+    }
+    toast.success("WhatsApp update prepared", { description: msg.slice(0, 90) + "…" });
+  };
+  return (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); send(); }}
+      className="mt-3 w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#25D366] px-2.5 py-1.5 text-[11px] font-medium text-white hover:opacity-90 transition-opacity"
+    >
+      <MessageCircle className="h-3.5 w-3.5" />
+      Send Update
+    </button>
+  );
+}
+
+function QrKioskCard() {
+  const url = typeof window !== "undefined" ? `${window.location.origin}/book` : "/book";
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="rounded-2xl border-2 border-dashed bg-card p-5 text-left transition-all hover:border-foreground hover:shadow-[var(--shadow-elevated)] group">
+          <div className="flex items-center justify-between">
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">Walk-in kiosk</span>
+            <QrCode className="h-4 w-4 opacity-60" />
+          </div>
+          <div className="mt-3 text-lg font-semibold tracking-tight">Print Gate QR Code</div>
+          <div className="mt-1 text-xs text-muted-foreground">Customers scan to book on arrival.</div>
+          <div className="mt-3 inline-flex items-center gap-1 text-xs text-primary group-hover:underline">
+            <Printer className="h-3 w-3" /> Open & print
+          </div>
+        </button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md rounded-3xl">
+        <DialogHeader>
+          <DialogTitle>Gate QR — FMZ Auto</DialogTitle>
+          <DialogDescription>Scan to book a service at the workshop.</DialogDescription>
+        </DialogHeader>
+        <div className="grid place-items-center py-4">
+          <div className="rounded-2xl border bg-white p-5 shadow-[var(--shadow-elevated)]">
+            <QRCodeSVG value={url} size={208} bgColor="#ffffff" fgColor="#0a0a0c" />
+          </div>
+          <div className="mt-3 font-mono text-xs text-muted-foreground break-all text-center">{url}</div>
+        </div>
+        <DialogFooter>
+          <Button onClick={() => window.print()} className="rounded-full bg-foreground text-background hover:bg-foreground/90">
+            <Printer className="h-4 w-4 mr-2" /> Print
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
