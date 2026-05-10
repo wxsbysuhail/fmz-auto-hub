@@ -6,7 +6,7 @@ import "./styles.css";
 const router = getRouter();
 
 const rootElement = document.getElementById("root")!;
-if (!rootElement.innerHTML) {
-  const root = createRoot(rootElement);
-  root.render(<RouterProvider router={router} />);
-}
+const root = createRoot(rootElement);
+
+// Ensure we are doing a clean render for SPA mode
+root.render(<RouterProvider router={router} />);
