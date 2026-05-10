@@ -52,11 +52,12 @@ function Admin() {
         </div>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-3 mb-8">
+      {/* Stat cards + QR kiosk */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
         <Stat icon={CalIcon} label="Today's bookings" value={todayBookings} hint="confirmed for today" />
         <Stat icon={Car} label="Cars in garage" value={inGarage} hint="active jobs" accent />
         <Stat icon={TrendingUp} label="Monthly volume" value={monthly} hint={format(new Date(), "MMMM")} />
+        <QrKioskCard />
       </div>
 
       <Tabs defaultValue="kanban">
@@ -139,21 +140,23 @@ function Kanban({ bookings, onSelect, onMove }: {
               </div>
               <div className="space-y-2 min-h-[120px]">
                 {items.map((b) => (
-                  <button
+                  <div
                     key={b.id}
                     draggable
                     onDragStart={() => setDragId(b.id)}
-                    onClick={() => onSelect(b)}
-                    className="w-full text-left rounded-xl border bg-card p-3 transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5 active:scale-[0.99]"
+                    className="group rounded-xl border bg-card p-3 transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium truncate">{b.clientName}</div>
-                      <span className="text-[10px] font-mono text-muted-foreground">{b.id}</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">{b.make} {b.model}</div>
-                    <div className="mt-2 inline-block rounded bg-secondary px-1.5 py-0.5 font-mono text-[11px]">{b.plate}</div>
-                    <div className="mt-2 text-xs text-muted-foreground line-clamp-2">{b.issue}</div>
-                  </button>
+                    <button onClick={() => onSelect(b)} className="w-full text-left">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium truncate">{b.clientName}</div>
+                        <span className="text-[10px] font-mono text-muted-foreground">{b.id}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">{b.make} {b.model}</div>
+                      <div className="mt-2 inline-block rounded bg-secondary px-1.5 py-0.5 font-mono text-[11px]">{b.plate}</div>
+                      <div className="mt-2 text-xs text-muted-foreground line-clamp-2">{b.issue}</div>
+                    </button>
+                    <WhatsAppButton booking={b} />
+                  </div>
                 ))}
                 {items.length === 0 && (
                   <div className="rounded-xl border border-dashed p-4 text-center text-xs text-muted-foreground">
