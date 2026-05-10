@@ -456,7 +456,7 @@ function PendingIntake({ bookings, onSelect, onConfirm }: {
 
       <div className="grid gap-4">
         {pending.map(b => {
-          const issuesCount = b.issues?.length || 0;
+          const issuesCount = b.issue?.length || 0;
           return (
             <div key={b.id} className="group relative overflow-hidden rounded-[2.5rem] border border-border/40 bg-background/40 backdrop-blur-xl p-8 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 hover:bg-background/60">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
