@@ -5,13 +5,16 @@ import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Stethoscope, Wrench, Cog, ChevronLeft, ChevronRight, Check, Loader2, CalendarDays } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Stethoscope, Wrench, Cog, ChevronLeft, ChevronRight, Check, Loader2, CalendarDays, Camera } from "lucide-react";
 import { useBookings, isClosedDay, type ServiceType } from "@/lib/store";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { HoldToSpeak } from "@/components/HoldToSpeak";
+import { PhotoUpload } from "@/components/PhotoUpload";
+import { PriceBadge } from "@/components/PriceBadge";
+import { Wallet, MessageSquare } from "lucide-react";
 
 export const Route = createFileRoute("/book")({
   head: () => ({
@@ -43,12 +46,15 @@ function Book() {
   const [plate, setPlate] = useState("");
   const [serviceType, setServiceType] = useState<ServiceType | "">("");
   const [issue, setIssue] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [date, setDate] = useState<Date | undefined>();
 
-  const canNext =
-    (step === 1 && clientName && make && model && plate) ||
-    (step === 2 && serviceType && issue.trim().length > 5) ||
-    (step === 3 && date);
+  const canNext = (() => {
+    if (step === 1) return !!(clientName && make && model && plate);
+    if (step === 2) return !!(serviceType && issue.trim().length > 5);
+    if (step === 3) return !!date;
+    return false;
+  })();
 
   const submit = async () => {
     if (!date || !serviceType) return;
@@ -63,6 +69,7 @@ function Book() {
       serviceType: serviceType as ServiceType,
       issue,
       date: date.toISOString(),
+      photos,
     });
     setSubmitting(false);
     toast.success("Booking confirmed", {
@@ -129,12 +136,15 @@ function Book() {
         )}
 
         {step === 2 && (
-          <div className="space-y-5">
-            <div>
-              <h2 className="text-xl font-semibold">{t("book.service.title")}</h2>
-              <p className="text-sm text-muted-foreground">{t("book.service.sub")}</p>
+          <div className="space-y-6">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold">{t("book.service.title")}</h2>
+                <p className="text-sm text-muted-foreground">{t("book.service.sub")}</p>
+              </div>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {SERVICES.map(({ id, icon: Icon, desc }) => {
                 const active = serviceType === id;
                 return (
@@ -142,29 +152,70 @@ function Book() {
                     key={id}
                     onClick={() => setServiceType(id)}
                     className={cn(
-                      "rounded-2xl border p-4 text-left transition-all",
+                      "group relative rounded-[2rem] border p-8 text-center transition-all duration-500 overflow-hidden",
                       active
-                        ? "border-foreground bg-foreground text-background shadow-[var(--shadow-elevated)] -translate-y-0.5"
-                        : "hover:bg-accent"
+                        ? "border-primary bg-primary/5 shadow-2xl shadow-primary/20 scale-[1.02]"
+                        : "border-border/40 hover:border-primary/40 hover:bg-secondary/20 hover:-translate-y-1"
                     )}
                   >
-                    <Icon className="h-5 w-5" />
-                    <div className="mt-3 text-sm font-medium">{id}</div>
-                    <div className={cn("text-xs mt-0.5", active ? "text-background/70" : "text-muted-foreground")}>{desc}</div>
+                    <div className={cn(
+                      "mx-auto h-16 w-16 rounded-3xl flex items-center justify-center mb-6 transition-all duration-500 shadow-inner",
+                      active 
+                        ? "bg-primary text-white rotate-6 scale-110 shadow-lg shadow-primary/30" 
+                        : "bg-secondary/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                    )}>
+                      <Icon className="h-7 w-7" />
+                    </div>
+                    
+                    <div className="space-y-1.5 relative z-10">
+                      <div className={cn(
+                        "text-sm font-black uppercase tracking-widest transition-colors",
+                        active ? "text-primary" : "text-foreground"
+                      )}>
+                        {id}
+                      </div>
+                      <div className={cn(
+                        "text-[10px] font-bold transition-colors",
+                        active ? "text-primary/60" : "text-muted-foreground/60"
+                      )}>
+                        {desc}
+                      </div>
+                    </div>
+
+                    {active && (
+                      <div className="absolute -right-4 -bottom-4 h-24 w-24 bg-primary/10 blur-3xl rounded-full" />
+                    )}
                   </button>
                 );
               })}
             </div>
+
+            <div className="w-full">
+              <Field label="Visual Intake (Photos)">
+                <PhotoUpload photos={photos} onChange={setPhotos} />
+              </Field>
+            </div>
+
             <Field label={t("book.field.issue")}>
-              <div className="flex gap-3 items-start">
-                <Textarea
+              <div className="relative group/hub rounded-[2.5rem] border border-border/40 bg-secondary/5 p-6 focus-within:border-primary/40 focus-within:bg-secondary/10 transition-all duration-500 shadow-inner">
+                <textarea
                   value={issue}
                   onChange={(e) => setIssue(e.target.value)}
                   placeholder={t("book.issue.placeholder")}
-                  rows={5}
-                  className="text-base"
+                  rows={4}
+                  className="w-full text-base bg-transparent border-none p-0 resize-none outline-none focus:ring-0 placeholder:text-muted-foreground/30 leading-relaxed appearance-none shadow-none"
                 />
-                <HoldToSpeak onCapture={(s) => setIssue((prev) => (prev ? prev + " " : "") + s)} />
+                <div className="absolute bottom-6 right-6 flex items-center gap-3 pointer-events-none">
+                  <div className={cn(
+                    "text-[8px] font-black uppercase tracking-[0.2em] text-primary transition-all duration-700",
+                    issue.length > 0 ? "opacity-40" : "opacity-0 translate-x-4"
+                  )}>
+                    A.I. Transcription Active
+                  </div>
+                  <div className="pointer-events-auto">
+                    <HoldToSpeak onCapture={(s) => setIssue((prev) => (prev ? prev + " " : "") + s)} />
+                  </div>
+                </div>
               </div>
             </Field>
           </div>
@@ -178,19 +229,54 @@ function Book() {
                 {t("book.date.sub")}
               </p>
             </div>
-            <div className="rounded-2xl border bg-background p-2 grid place-items-center">
+            <div className="relative overflow-hidden rounded-[2.5rem] border border-border/40 bg-secondary/5 p-8 sm:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+              
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={setDate}
                 disabled={(d) => isClosedDay(d) || d < new Date(new Date().setHours(0, 0, 0, 0))}
-                className={cn("p-3 pointer-events-auto")}
+                className="w-full p-0 pointer-events-auto"
+                classNames={{
+                  months: "w-full",
+                  month: "w-full space-y-8",
+                  month_caption: "flex justify-center relative items-center mb-4",
+                  caption_label: "text-lg font-black uppercase tracking-[0.3em] text-foreground",
+                  nav: "flex items-center justify-between absolute w-full z-10",
+                  button_previous: "h-10 w-10 bg-background border border-border/40 rounded-2xl flex items-center justify-center hover:bg-secondary transition-all shadow-sm",
+                  button_next: "h-10 w-10 bg-background border border-border/40 rounded-2xl flex items-center justify-center hover:bg-secondary transition-all shadow-sm",
+                  table: "w-full border-collapse",
+                  head_row: "flex w-full mb-4",
+                  head_cell: "text-muted-foreground/40 flex-1 font-black text-[10px] uppercase tracking-widest text-center",
+                  row: "flex w-full mt-2",
+                  cell: "flex-1 relative p-0 text-center focus-within:relative focus-within:z-20",
+                  day: cn(
+                    buttonVariants({ variant: "ghost" }),
+                    "h-12 w-12 sm:h-14 sm:w-14 p-0 font-bold aria-selected:opacity-100 rounded-2xl transition-all duration-300 hover:scale-110"
+                  ),
+                  today: "bg-primary/10 text-primary rounded-2xl",
+                  selected: "bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white shadow-[0_10px_20px_rgba(var(--primary),0.3)] scale-110 rotate-3",
+                  outside: "text-muted-foreground/20 opacity-50",
+                  disabled: "text-muted-foreground/10 line-through decoration-primary/20",
+                }}
               />
             </div>
+
             {date && (
-              <div className="flex items-center gap-2 rounded-xl bg-secondary px-4 py-3 text-sm">
-                <CalendarDays className="h-4 w-4" />
-                Selected: <span className="font-medium">{format(date, "EEEE, MMMM d")}</span>
+              <div className="flex items-center justify-between rounded-3xl bg-primary/5 border border-primary/10 px-6 py-5 anim-in">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                    <CalendarDays className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/60">Selected Appointment</div>
+                    <div className="text-lg font-bold">{format(date, "EEEE, MMMM d")}</div>
+                  </div>
+                </div>
+                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary animate-pulse">
+                  <Check className="h-5 w-5" />
+                </div>
               </div>
             )}
           </div>

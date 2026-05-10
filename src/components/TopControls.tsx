@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 const LANGS: { id: Lang; label: string }[] = [
   { id: "en", label: "EN" },
   { id: "fr", label: "FR" },
-  { id: "kr", label: "KR" },
 ];
 
 export function TopControls() {

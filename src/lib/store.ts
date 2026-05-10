@@ -13,6 +13,13 @@ export type Status = (typeof STATUSES)[number];
 
 export type ServiceType = "Diagnostics" | "Routine Service" | "Mechanical Repair";
 
+export interface QuoteItem {
+  description: string;
+  price: number;
+}
+
+export type QuoteStatus = "draft" | "pending" | "approved" | "rejected";
+
 export interface Booking {
   id: string;
   clientName: string;
@@ -25,6 +32,16 @@ export interface Booking {
   date: string; // ISO
   status: Status;
   createdAt: string;
+  photos?: string[];
+  quote?: number; // Total legacy quote
+  quoteItems?: QuoteItem[];
+  quoteStatus?: QuoteStatus;
+  isConfirmed?: boolean;
+  issueMap?: { x: number; y: number }[];
+  isPaid?: boolean;
+  priority?: "low" | "medium" | "high";
+  technician?: string;
+  estimatedDays?: number;
 }
 
 const KEY = "fmz.bookings.v1";
@@ -43,16 +60,32 @@ const today = () => {
 };
 
 const SEED: Booking[] = [
-  { id: "FMZ-1042", clientName: "Amélie Laurent", phone: "+33 6 12 34 56 78", make: "Porsche", model: "911 Carrera", plate: "AZ-918-PR", serviceType: "Diagnostics", issue: "Intermittent check-engine light at highway speeds.", date: today(), status: "Diagnosing", createdAt: daysAgo(1) },
-  { id: "FMZ-1043", clientName: "Marcus Chen", phone: "+1 415 555 0144", make: "Tesla", model: "Model 3", plate: "EV-3-SF", serviceType: "Routine Service", issue: "Tire rotation and cabin filter replacement.", date: today(), status: "Vehicle in Garage", createdAt: daysAgo(1) },
-  { id: "FMZ-1044", clientName: "Sofia Romano", make: "BMW", model: "M340i", plate: "BM-340-IT", serviceType: "Mechanical Repair", issue: "Front brake pads and rotors squealing.", date: today(), status: "Waiting on Parts", createdAt: daysAgo(2) },
-  { id: "FMZ-1045", clientName: "James Okafor", make: "Audi", model: "RS6 Avant", plate: "RS-6-AV", serviceType: "Mechanical Repair", issue: "Suspension knock on uneven roads.", date: today(), status: "Waiting on Parts", createdAt: daysAgo(3) },
-  { id: "FMZ-1046", clientName: "Yuki Tanaka", make: "Mazda", model: "MX-5", plate: "MX-5-JP", serviceType: "Routine Service", issue: "30k mile service interval.", date: today(), status: "Waiting on Parts", createdAt: daysAgo(2) },
-  { id: "FMZ-1047", clientName: "Elena Vasquez", make: "Mercedes", model: "C63 AMG", plate: "C-63-AMG", serviceType: "Mechanical Repair", issue: "Oil leak near valve cover.", date: today(), status: "In Repair", createdAt: daysAgo(2) },
-  { id: "FMZ-1048", clientName: "David Müller", make: "Volkswagen", model: "Golf GTI", plate: "GT-I-DE", serviceType: "Mechanical Repair", issue: "DSG transmission jerking on shifts.", date: today(), status: "In Repair", createdAt: daysAgo(3) },
-  { id: "FMZ-1049", clientName: "Priya Patel", make: "Honda", model: "Civic Type R", plate: "TYPE-R", serviceType: "Routine Service", issue: "Oil change & inspection.", date: today(), status: "Ready for Pickup", createdAt: daysAgo(4) },
-  { id: "FMZ-1050", clientName: "Olivia Martin", make: "Range Rover", model: "Sport", plate: "RR-SPRT", serviceType: "Diagnostics", issue: "Air suspension warning.", date: today(), status: "Booking Confirmed", createdAt: daysAgo(0) },
-  { id: "FMZ-1051", clientName: "Lucas Bernard", make: "Ford", model: "Mustang GT", plate: "MUST-GT", serviceType: "Routine Service", issue: "Annual inspection.", date: today(), status: "Booking Confirmed", createdAt: daysAgo(0) },
+  { 
+    id: "FMZ-1042", 
+    clientName: "Amélie Laurent", 
+    phone: "+33 6 12 34 56 78", 
+    make: "Porsche", 
+    model: "911 Carrera", 
+    plate: "AZ-918-PR", 
+    serviceType: "Diagnostics", 
+    issue: "Intermittent check-engine light at highway speeds.", 
+    date: today(), 
+    status: "Diagnosing", 
+    createdAt: daysAgo(1),
+    quote: 150,
+    isConfirmed: true,
+    priority: "high",
+    technician: "Alex Rivera"
+  },
+  { id: "FMZ-1043", clientName: "Marcus Chen", phone: "+1 415 555 0144", make: "Tesla", model: "Model 3", plate: "EV-3-SF", serviceType: "Routine Service", issue: "Tire rotation and cabin filter replacement.", date: today(), status: "Vehicle in Garage", createdAt: daysAgo(1), quote: 80, isConfirmed: true, priority: "low", technician: "Sam Lee", estimatedDays: 1 },
+  { id: "FMZ-1044", clientName: "Sofia Romano", make: "BMW", model: "M340i", plate: "BM-340-IT", serviceType: "Mechanical Repair", issue: "Front brake pads and rotors squealing.", date: today(), status: "Waiting on Parts", createdAt: daysAgo(2), quote: 450, isConfirmed: true, priority: "medium", technician: "Alex Rivera", estimatedDays: 3 },
+  { id: "FMZ-1045", clientName: "James Okafor", make: "Audi", model: "RS6 Avant", plate: "RS-6-AV", serviceType: "Mechanical Repair", issue: "Suspension knock on uneven roads.", date: today(), status: "Waiting on Parts", createdAt: daysAgo(3), quote: 850, isConfirmed: true, priority: "high", estimatedDays: 5 },
+  { id: "FMZ-1046", clientName: "Yuki Tanaka", make: "Mazda", model: "MX-5", plate: "MX-5-JP", serviceType: "Routine Service", issue: "30k mile service interval.", date: today(), status: "Waiting on Parts", createdAt: daysAgo(2), quote: 120, isConfirmed: true, priority: "low", estimatedDays: 1 },
+  { id: "FMZ-1047", clientName: "Elena Vasquez", make: "Mercedes", model: "C63 AMG", plate: "C-63-AMG", serviceType: "Mechanical Repair", issue: "Oil leak near valve cover.", date: today(), status: "In Repair", createdAt: daysAgo(2), quote: 320, isConfirmed: true, priority: "medium", technician: "Sam Lee", estimatedDays: 2 },
+  { id: "FMZ-1048", clientName: "David Müller", make: "Volkswagen", model: "Golf GTI", plate: "GT-I-DE", serviceType: "Mechanical Repair", issue: "DSG transmission jerking on shifts.", date: today(), status: "In Repair", createdAt: daysAgo(3), quote: 1200, isConfirmed: true, priority: "high", technician: "Alex Rivera", estimatedDays: 4 },
+  { id: "FMZ-1049", clientName: "Priya Patel", make: "Honda", model: "Civic Type R", plate: "TYPE-R", serviceType: "Routine Service", issue: "Oil change & inspection.", date: today(), status: "Ready for Pickup", createdAt: daysAgo(4), quote: 95, isConfirmed: true, isPaid: true, priority: "low", technician: "Sam Lee", estimatedDays: 1 },
+  { id: "FMZ-1050", clientName: "Olivia Martin", make: "Range Rover", model: "Sport", plate: "RR-SPRT", serviceType: "Diagnostics", issue: "Air suspension warning.", date: today(), status: "Booking Confirmed", createdAt: daysAgo(0), isConfirmed: false, priority: "medium", estimatedDays: 2 },
+  { id: "FMZ-1051", clientName: "Lucas Bernard", make: "Ford", model: "Mustang GT", plate: "MUST-GT", serviceType: "Routine Service", issue: "Annual inspection.", date: today(), status: "Booking Confirmed", createdAt: daysAgo(0), isConfirmed: false, priority: "low", estimatedDays: 1 },
 ];
 
 function load(): Booking[] {
@@ -88,16 +121,30 @@ export function useBookings() {
     };
   }, []);
 
-  const addBooking = useCallback((b: Omit<Booking, "id" | "status" | "createdAt">) => {
+  const addBooking = useCallback((b: Omit<Booking, "id" | "status" | "createdAt" | "isConfirmed">) => {
     const current = load();
     const nb: Booking = {
       ...b,
       id: `FMZ-${1000 + current.length + 50}`,
       status: "Booking Confirmed",
       createdAt: new Date().toISOString(),
+      isConfirmed: false,
+      isPaid: false,
+      priority: "medium",
+      estimatedDays: 1,
     };
     save([nb, ...current]);
     return nb;
+  }, []);
+
+  const confirmBooking = useCallback((id: string) => {
+    const current = load();
+    save(current.map((x) => (x.id === id ? { ...x, isConfirmed: true } : x)));
+  }, []);
+
+  const setQuote = useCallback((id: string, quote: number) => {
+    const current = load();
+    save(current.map((x) => (x.id === id ? { ...x, quote } : x)));
   }, []);
 
   const updateStatus = useCallback((id: string, status: Status) => {
@@ -105,7 +152,38 @@ export function useBookings() {
     save(current.map((x) => (x.id === id ? { ...x, status } : x)));
   }, []);
 
-  return { bookings, addBooking, updateStatus };
+  const markAsPaid = useCallback((id: string) => {
+    const current = load();
+    save(current.map((x) => (x.id === id ? { ...x, isPaid: true } : x)));
+  }, []);
+
+  const assignTechnician = useCallback((id: string, technician: string) => {
+    const current = load();
+    save(current.map((x) => (x.id === id ? { ...x, technician } : x)));
+  }, []);
+
+  const setPriority = useCallback((id: string, priority: Booking["priority"]) => {
+    const current = load();
+    save(current.map((x) => (x.id === id ? { ...x, priority } : x)));
+  }, []);
+
+  const setEstimatedDays = useCallback((id: string, estimatedDays: number) => {
+    const current = load();
+    save(current.map((x) => (x.id === id ? { ...x, estimatedDays } : x)));
+  }, []);
+
+  const setDetailedQuote = useCallback((id: string, items: QuoteItem[], status: QuoteStatus = "pending") => {
+    const current = load();
+    const total = items.reduce((sum, item) => sum + item.price, 0);
+    save(current.map((x) => (x.id === id ? { ...x, quoteItems: items, quoteStatus: status, quote: total } : x)));
+  }, []);
+
+  const respondToQuote = useCallback((id: string, status: "approved" | "rejected") => {
+    const current = load();
+    save(current.map((x) => (x.id === id ? { ...x, quoteStatus: status } : x)));
+  }, []);
+
+  return { bookings, addBooking, updateStatus, markAsPaid, confirmBooking, setQuote, assignTechnician, setPriority, setEstimatedDays, setDetailedQuote, respondToQuote };
 }
 
 export function findByPlate(plate: string): Booking | undefined {

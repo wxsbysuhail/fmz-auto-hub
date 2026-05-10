@@ -13,6 +13,7 @@ import { Wrench } from "lucide-react";
 import { I18nProvider, useI18n } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import { TopControls } from "@/components/TopControls";
+import { NavBar } from "@/components/NavBar";
 
 import appCss from "../styles.css?url";
 
@@ -70,7 +71,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head><HeadContent /></head>
       <body>
         {children}
@@ -80,41 +81,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function NavBar() {
-  const path = useRouterState({ select: (s) => s.location.pathname });
-  const { t } = useI18n();
-  const isAdmin = path.startsWith("/admin");
-  const link = (to: string, label: string) => (
-    <Link
-      to={to}
-      className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-        path === to ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
-      }`}
-    >
-      {label}
-    </Link>
-  );
-  return (
-    <header className="sticky top-0 z-40 glass border-b">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
-        <Link to="/" className="flex items-center gap-2 group">
-          <span className="grid place-items-center h-8 w-8 rounded-xl bg-foreground text-background">
-            <Wrench className="h-4 w-4" />
-          </span>
-          <span className="font-semibold tracking-tight">FMZ Auto</span>
-        </Link>
-        <div className="flex items-center gap-3">
-          <nav className="flex items-center gap-1">
-            {!isAdmin && link("/book", t("nav.book"))}
-            {!isAdmin && link("/track", t("nav.track"))}
-            {link("/admin", t("nav.admin"))}
-          </nav>
-          <TopControls />
-        </div>
-      </div>
-    </header>
-  );
-}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -123,7 +89,9 @@ function RootComponent() {
       <ThemeProvider>
         <I18nProvider>
           <NavBar />
-          <Outlet />
+          <div className="pt-24">
+            <Outlet />
+          </div>
           <Toaster position="top-center" />
         </I18nProvider>
       </ThemeProvider>

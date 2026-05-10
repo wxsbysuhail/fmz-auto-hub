@@ -42,26 +42,31 @@ export function HoldToSpeak({ onCapture, samples, className, size = "lg" }: Prop
   const dim = size === "lg" ? "h-12 w-12" : "h-9 w-9";
 
   return (
-    <button
-      type="button"
-      aria-label={t("speak.hold")}
-      title={t("speak.hold")}
-      onMouseDown={start}
-      onMouseUp={end}
-      onMouseLeave={() => active && end()}
-      onTouchStart={(e) => { e.preventDefault(); start(); }}
-      onTouchEnd={(e) => { e.preventDefault(); end(); }}
-      className={cn(
-        "shrink-0 grid place-items-center rounded-full border-2 transition-all select-none",
-        dim,
-        active
-          ? "bg-primary text-primary-foreground border-primary scale-110 anim-pulse-dot"
-          : "bg-background text-foreground border-foreground/20 hover:border-foreground/50",
-        className
+    <div className="relative">
+      {active && (
+        <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping -z-10 scale-150" />
       )}
-    >
-      <Mic className={size === "lg" ? "h-5 w-5" : "h-4 w-4"} />
-      <span className="sr-only">{active ? t("speak.listening") : t("speak.hold")}</span>
-    </button>
+      <button
+        type="button"
+        aria-label={t("speak.hold")}
+        title={t("speak.hold")}
+        onMouseDown={start}
+        onMouseUp={end}
+        onMouseLeave={() => active && end()}
+        onTouchStart={(e) => { e.preventDefault(); start(); }}
+        onTouchEnd={(e) => { e.preventDefault(); end(); }}
+        className={cn(
+          "shrink-0 grid place-items-center rounded-full border-2 transition-all duration-500 select-none relative z-10",
+          dim,
+          active
+            ? "bg-primary text-primary-foreground border-primary shadow-[0_0_30px_rgba(var(--primary),0.5)] scale-110"
+            : "bg-background text-foreground border-border/40 hover:border-primary/40 hover:bg-secondary/30",
+          className
+        )}
+      >
+        <Mic className={size === "lg" ? "h-6 w-6" : "h-4 w-4"} />
+        <span className="sr-only">{active ? t("speak.listening") : t("speak.hold")}</span>
+      </button>
+    </div>
   );
 }
