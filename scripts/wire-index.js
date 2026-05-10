@@ -12,19 +12,28 @@ if (!fs.existsSync(assetsDir)) {
 }
 
 const files = fs.readdirSync(assetsDir);
-// Find the main index chunk. TanStack Start usually names it index-XXXX.js
+// Find the main index chunk and the main styles chunk
 const indexJs = files.find((f) => f.startsWith("index-") && f.endsWith(".js"));
+const mainCss = files.find((f) => f.startsWith("styles-") && f.endsWith(".css"));
 
 if (!indexJs) {
   console.error("❌ Could not find compiled index JS chunk!");
   process.exit(1);
 }
 
-console.log(`✅ Found entry point: ${indexJs}`);
+console.log(`✅ Found JS entry point: ${indexJs}`);
+if (mainCss) console.log(`✅ Found CSS entry point: ${mainCss}`);
 
 let html = fs.readFileSync("index.html", "utf8");
+
+// Inject CSS into <head>
+if (mainCss) {
+  const cssLink = `<link rel="stylesheet" href="/assets/${mainCss}">`;
+  html = html.replace("</head>", `  ${cssLink}\n  </head>`);
+}
+
 // Replace the raw source path with the compiled asset path
 html = html.replace("/src/main.tsx", `/assets/${indexJs}`);
 
 fs.writeFileSync(path.join(clientDist, "index.html"), html);
-console.log("🚀 index.html wired and deployed to dist/client!");
+console.log("🚀 index.html fully wired and deployed to dist/client!");
