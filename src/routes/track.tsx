@@ -8,6 +8,8 @@ import { findByPlate, STATUSES, type Booking, type Status } from "@/lib/store";
 import { Search, CheckCircle2, Loader2, Car, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { useI18n } from "@/lib/i18n";
+import { HoldToSpeak } from "@/components/HoldToSpeak";
 
 const searchSchema = z.object({ plate: z.string().optional() });
 
@@ -24,6 +26,7 @@ export const Route = createFileRoute("/track")({
 
 function Track() {
   const { plate: initialPlate } = Route.useSearch();
+  const { t } = useI18n();
   const [plate, setPlate] = useState(initialPlate ?? "");
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -55,39 +58,43 @@ function Track() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 sm:px-6 py-10 sm:py-16">
-      <h1 className="text-3xl font-semibold tracking-tight">Track your repair</h1>
-      <p className="mt-2 text-muted-foreground">Enter your license plate to see live status.</p>
+      <h1 className="text-3xl font-semibold tracking-tight">{t("track.title")}</h1>
+      <p className="mt-2 text-muted-foreground">{t("track.sub")}</p>
 
       <form
         onSubmit={(e) => { e.preventDefault(); if (plate.trim()) lookup(plate.trim()); }}
-        className="mt-6 flex gap-2"
+        className="mt-6 flex gap-2 items-center"
       >
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             value={plate}
             onChange={(e) => setPlate(e.target.value.toUpperCase())}
-            placeholder="e.g. AZ-918-PR"
-            className="pl-10 h-12 rounded-full uppercase tracking-wider font-mono"
+            placeholder={t("track.placeholder")}
+            className="pl-10 h-12 rounded-full uppercase tracking-wider font-mono text-base"
           />
         </div>
+        <HoldToSpeak
+          onCapture={(s) => setPlate(s.toUpperCase().replace(/[^A-Z0-9-]/g, ""))}
+          samples={{ en: ["AZ-918-PR", "EV-3-SF"], fr: ["AZ-918-PR", "C-63-AMG"], kr: ["AZ-918-PR", "TYPE-R"] }}
+        />
         <Button type="submit" className="h-12 rounded-full px-6 bg-foreground text-background hover:bg-foreground/90" disabled={!plate.trim() || loading}>
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Track"}
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("track.action")}
         </Button>
       </form>
 
       <div className="mt-10">
         {loading && (
-          <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Locating your vehicle…</div>
+          <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> {t("track.locating")}</div>
         )}
 
         {!loading && searched && !booking && (
           <div className="rounded-2xl border bg-card p-8 text-center anim-in">
             <Car className="mx-auto h-8 w-8 text-muted-foreground" />
-            <p className="mt-3 font-medium">No vehicle found</p>
-            <p className="text-sm text-muted-foreground">Double-check the plate, or book a new service.</p>
+            <p className="mt-3 font-medium">{t("track.notfound")}</p>
+            <p className="text-sm text-muted-foreground">{t("track.notfound.sub")}</p>
             <Link to="/book" className="mt-4 inline-flex items-center gap-1 text-sm text-primary hover:underline">
-              Book a service <ArrowRight className="h-3.5 w-3.5" />
+              {t("nav.book")} <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         )}

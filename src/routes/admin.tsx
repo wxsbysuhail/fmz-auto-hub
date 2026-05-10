@@ -3,17 +3,18 @@ import { useMemo, useState } from "react";
 import { useBookings, STATUSES, type Booking, type Status, isClosedDay } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
-import { Wrench, Car, Calendar as CalIcon, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Wrench, Car, Calendar as CalIcon, TrendingUp, ChevronLeft, ChevronRight, MessageCircle, QrCode, Printer } from "lucide-react";
 import { format, isSameDay, isSameMonth, startOfMonth } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { QRCodeSVG } from "qrcode.react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -51,11 +52,12 @@ function Admin() {
         </div>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-3 mb-8">
+      {/* Stat cards + QR kiosk */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
         <Stat icon={CalIcon} label="Today's bookings" value={todayBookings} hint="confirmed for today" />
         <Stat icon={Car} label="Cars in garage" value={inGarage} hint="active jobs" accent />
         <Stat icon={TrendingUp} label="Monthly volume" value={monthly} hint={format(new Date(), "MMMM")} />
+        <QrKioskCard />
       </div>
 
       <Tabs defaultValue="kanban">
@@ -138,21 +140,23 @@ function Kanban({ bookings, onSelect, onMove }: {
               </div>
               <div className="space-y-2 min-h-[120px]">
                 {items.map((b) => (
-                  <button
+                  <div
                     key={b.id}
                     draggable
                     onDragStart={() => setDragId(b.id)}
-                    onClick={() => onSelect(b)}
-                    className="w-full text-left rounded-xl border bg-card p-3 transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5 active:scale-[0.99]"
+                    className="group rounded-xl border bg-card p-3 transition-all hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium truncate">{b.clientName}</div>
-                      <span className="text-[10px] font-mono text-muted-foreground">{b.id}</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">{b.make} {b.model}</div>
-                    <div className="mt-2 inline-block rounded bg-secondary px-1.5 py-0.5 font-mono text-[11px]">{b.plate}</div>
-                    <div className="mt-2 text-xs text-muted-foreground line-clamp-2">{b.issue}</div>
-                  </button>
+                    <button onClick={() => onSelect(b)} className="w-full text-left">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium truncate">{b.clientName}</div>
+                        <span className="text-[10px] font-mono text-muted-foreground">{b.id}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">{b.make} {b.model}</div>
+                      <div className="mt-2 inline-block rounded bg-secondary px-1.5 py-0.5 font-mono text-[11px]">{b.plate}</div>
+                      <div className="mt-2 text-xs text-muted-foreground line-clamp-2">{b.issue}</div>
+                    </button>
+                    <WhatsAppButton booking={b} />
+                  </div>
                 ))}
                 {items.length === 0 && (
                   <div className="rounded-xl border border-dashed p-4 text-center text-xs text-muted-foreground">
@@ -315,5 +319,77 @@ function Info({ label, value }: { label: string; value: string }) {
       <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-0.5 font-medium">{value}</div>
     </div>
+  );
+}
+
+function statusMessage(b: Booking): string {
+  const map: Record<Status, string> = {
+    "Booking Confirmed": `your booking for the ${b.make} ${b.model} (${b.plate}) is confirmed.`,
+    "Vehicle in Garage": `we've received your ${b.make} ${b.model} (${b.plate}) at the workshop.`,
+    "Diagnosing": `our team is diagnosing your ${b.make} ${b.model} (${b.plate}) right now.`,
+    "Waiting on Parts": `we're waiting on parts for your ${b.make} ${b.model} (${b.plate}). We'll keep you posted.`,
+    "In Repair": `your ${b.make} ${b.model} (${b.plate}) is now in active repair.`,
+    "Ready for Pickup": `great news — your ${b.make} ${b.model} (${b.plate}) is ready for pickup!`,
+  };
+  return `Hi ${b.clientName}, this is FMZ Auto. Update on ref ${b.id}: ${map[b.status]}`;
+}
+
+function WhatsAppButton({ booking }: { booking: Booking }) {
+  const send = () => {
+    const msg = statusMessage(booking);
+    const phone = (booking.phone ?? "").replace(/[^\d]/g, "");
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    if (typeof window !== "undefined") {
+      try { window.open(url, "_blank", "noopener,noreferrer"); } catch {}
+    }
+    toast.success("WhatsApp update prepared", { description: msg.slice(0, 90) + "…" });
+  };
+  return (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); send(); }}
+      className="mt-3 w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#25D366] px-2.5 py-1.5 text-[11px] font-medium text-white hover:opacity-90 transition-opacity"
+    >
+      <MessageCircle className="h-3.5 w-3.5" />
+      Send Update
+    </button>
+  );
+}
+
+function QrKioskCard() {
+  const url = typeof window !== "undefined" ? `${window.location.origin}/book` : "/book";
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="rounded-2xl border-2 border-dashed bg-card p-5 text-left transition-all hover:border-foreground hover:shadow-[var(--shadow-elevated)] group">
+          <div className="flex items-center justify-between">
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">Walk-in kiosk</span>
+            <QrCode className="h-4 w-4 opacity-60" />
+          </div>
+          <div className="mt-3 text-lg font-semibold tracking-tight">Print Gate QR Code</div>
+          <div className="mt-1 text-xs text-muted-foreground">Customers scan to book on arrival.</div>
+          <div className="mt-3 inline-flex items-center gap-1 text-xs text-primary group-hover:underline">
+            <Printer className="h-3 w-3" /> Open & print
+          </div>
+        </button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md rounded-3xl">
+        <DialogHeader>
+          <DialogTitle>Gate QR — FMZ Auto</DialogTitle>
+          <DialogDescription>Scan to book a service at the workshop.</DialogDescription>
+        </DialogHeader>
+        <div className="grid place-items-center py-4">
+          <div className="rounded-2xl border bg-white p-5 shadow-[var(--shadow-elevated)]">
+            <QRCodeSVG value={url} size={208} bgColor="#ffffff" fgColor="#0a0a0c" />
+          </div>
+          <div className="mt-3 font-mono text-xs text-muted-foreground break-all text-center">{url}</div>
+        </div>
+        <DialogFooter>
+          <Button onClick={() => window.print()} className="rounded-full bg-foreground text-background hover:bg-foreground/90">
+            <Printer className="h-4 w-4 mr-2" /> Print
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
