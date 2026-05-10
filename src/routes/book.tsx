@@ -10,6 +10,8 @@ import { Stethoscope, Wrench, Cog, ChevronLeft, ChevronRight, Check, Loader2, Ca
 import { useBookings, isClosedDay, type ServiceType } from "@/lib/store";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+import { HoldToSpeak } from "@/components/HoldToSpeak";
 
 export const Route = createFileRoute("/book")({
   head: () => ({
@@ -30,6 +32,7 @@ const SERVICES: { id: ServiceType; icon: any; desc: string }[] = [
 function Book() {
   const router = useRouter();
   const { addBooking } = useBookings();
+  const { t } = useI18n();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
@@ -71,8 +74,8 @@ function Book() {
   return (
     <main className="mx-auto max-w-2xl px-4 sm:px-6 py-10 sm:py-16">
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-semibold tracking-tight">Book a service</h1>
-        <span className="text-sm text-muted-foreground">Step {step} of 3</span>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("book.title")}</h1>
+        <span className="text-sm text-muted-foreground">{t("book.step", { n: step })}</span>
       </div>
 
       {/* Progress */}
@@ -92,29 +95,34 @@ function Book() {
         {step === 1 && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-semibold">Your vehicle</h2>
-              <p className="text-sm text-muted-foreground">Tell us what we'll be working on.</p>
+              <h2 className="text-xl font-semibold">{t("book.vehicle.title")}</h2>
+              <p className="text-sm text-muted-foreground">{t("book.vehicle.sub")}</p>
             </div>
-            <Field label="Your name">
-              <Input value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Jane Doe" />
+            <Field label={t("book.field.name")}>
+              <div className="flex gap-2 items-center">
+                <Input value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Jane Doe" className="h-11 text-base" />
+                <HoldToSpeak size="sm" onCapture={(s) => setClientName(s.replace(/[.!]/g, ""))} samples={{
+                  en: ["Jane Doe", "Marcus Chen"], fr: ["Amélie Laurent", "Lucas Bernard"], kr: ["Jean Pierre", "Marie Joseph"],
+                }} />
+              </div>
             </Field>
-            <Field label="Phone (optional)">
-              <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1 555 0100" />
+            <Field label={t("book.field.phone")}>
+              <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1 555 0100" className="h-11 text-base" />
             </Field>
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Make">
-                <Input value={make} onChange={(e) => setMake(e.target.value)} placeholder="Porsche" />
+              <Field label={t("book.field.make")}>
+                <Input value={make} onChange={(e) => setMake(e.target.value)} placeholder="Porsche" className="h-11 text-base" />
               </Field>
-              <Field label="Model">
-                <Input value={model} onChange={(e) => setModel(e.target.value)} placeholder="911" />
+              <Field label={t("book.field.model")}>
+                <Input value={model} onChange={(e) => setModel(e.target.value)} placeholder="911" className="h-11 text-base" />
               </Field>
             </div>
-            <Field label="License plate">
+            <Field label={t("book.field.plate")}>
               <Input
                 value={plate}
                 onChange={(e) => setPlate(e.target.value.toUpperCase())}
                 placeholder="AZ-918-PR"
-                className="uppercase tracking-wider font-mono"
+                className="h-11 text-base uppercase tracking-wider font-mono"
               />
             </Field>
           </div>
@@ -123,8 +131,8 @@ function Book() {
         {step === 2 && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-semibold">What do you need?</h2>
-              <p className="text-sm text-muted-foreground">Pick a service and describe the issue.</p>
+              <h2 className="text-xl font-semibold">{t("book.service.title")}</h2>
+              <p className="text-sm text-muted-foreground">{t("book.service.sub")}</p>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {SERVICES.map(({ id, icon: Icon, desc }) => {
@@ -147,13 +155,17 @@ function Book() {
                 );
               })}
             </div>
-            <Field label="Describe the issue">
-              <Textarea
-                value={issue}
-                onChange={(e) => setIssue(e.target.value)}
-                placeholder="When does it happen? Any noises, lights, or symptoms?"
-                rows={5}
-              />
+            <Field label={t("book.field.issue")}>
+              <div className="flex gap-3 items-start">
+                <Textarea
+                  value={issue}
+                  onChange={(e) => setIssue(e.target.value)}
+                  placeholder={t("book.issue.placeholder")}
+                  rows={5}
+                  className="text-base"
+                />
+                <HoldToSpeak onCapture={(s) => setIssue((prev) => (prev ? prev + " " : "") + s)} />
+              </div>
             </Field>
           </div>
         )}
@@ -161,9 +173,9 @@ function Book() {
         {step === 3 && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-semibold">Choose a date</h2>
+              <h2 className="text-xl font-semibold">{t("book.date.title")}</h2>
               <p className="text-sm text-muted-foreground">
-                We're closed Wednesdays and Sundays.
+                {t("book.date.sub")}
               </p>
             </div>
             <div className="rounded-2xl border bg-background p-2 grid place-items-center">
@@ -191,7 +203,7 @@ function Book() {
             disabled={step === 1}
             className="rounded-full"
           >
-            <ChevronLeft className="h-4 w-4 mr-1" /> Back
+            <ChevronLeft className="h-4 w-4 mr-1" /> {t("book.back")}
           </Button>
           {step < 3 ? (
             <Button
@@ -199,7 +211,7 @@ function Book() {
               onClick={() => setStep((s) => s + 1)}
               className="rounded-full bg-foreground text-background hover:bg-foreground/90"
             >
-              Continue <ChevronRight className="h-4 w-4 ml-1" />
+              {t("book.continue")} <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           ) : (
             <Button
@@ -208,7 +220,7 @@ function Book() {
               className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {submitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Check className="h-4 w-4 mr-2" />}
-              Confirm booking
+              {t("book.confirm")}
             </Button>
           )}
         </div>
