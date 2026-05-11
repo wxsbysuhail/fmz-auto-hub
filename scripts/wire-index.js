@@ -11,9 +11,12 @@ if (!fs.existsSync(assetsDir)) {
   process.exit(1);
 }
 
-const files = fs.readdirSync(assetsDir);
-const indexJs = files.find((f) => f.startsWith("index-") && f.endsWith(".js"));
-const mainCss = files.find((f) => f.startsWith("styles-") && f.endsWith(".css"));
+const files = fs.readdirSync(assetsDir)
+  .map(name => ({ name, time: fs.statSync(path.join(assetsDir, name)).mtimeMs }))
+  .sort((a, b) => b.time - a.time);
+
+const indexJs = files.find((f) => f.name.startsWith("index-") && f.name.endsWith(".js"))?.name;
+const mainCss = files.find((f) => f.name.startsWith("styles-") && f.name.endsWith(".css"))?.name;
 
 if (!indexJs) {
   console.error("❌ Could not find compiled index JS chunk!");
