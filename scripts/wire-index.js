@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-const clientDist = "dist/client";
+const clientDist = "dist";
 const assetsDir = path.join(clientDist, "assets");
 
 console.log("🛠️ Starting Studio-Grade Index Wiring...");
