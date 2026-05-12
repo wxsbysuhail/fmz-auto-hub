@@ -11,7 +11,7 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Wrench, Car, Calendar as CalIcon, TrendingUp, ChevronLeft, ChevronRight, MessageCircle, QrCode, Printer, ShieldAlert, User, DollarSign, Clock, ListChecks, CalendarRange, Filter, Check, Bell, BellRing, Package, AlertCircle, Camera, Star, Plus, Zap, Sparkles } from "lucide-react";
+import { Wrench, Car, Calendar as CalIcon, TrendingUp, ChevronLeft, ChevronRight, MessageCircle, QrCode, Printer, ShieldAlert, User, Clock, ListChecks, CalendarRange, Filter, Check, Bell, BellRing, Package, AlertCircle, Camera, Star, Plus, Zap, Sparkles } from "lucide-react";
 import { format, isSameDay, isSameMonth, startOfMonth, addDays, eachDayOfInterval, isWithinInterval } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -146,7 +146,7 @@ function Kanban({ bookings, onSelect, onMove }: {
                       
                       <div className="flex items-center justify-between mt-auto">
                         {b.quote ? (
-                          <div className="text-xs font-black text-primary">${b.quote.toLocaleString()}</div>
+                          <div className="text-xs font-black text-primary">Rs {b.quote.toLocaleString()}</div>
                         ) : (
                           <div className="text-[9px] font-bold uppercase tracking-widest opacity-30 italic">No Quote</div>
                         )}
@@ -1226,7 +1226,7 @@ function Admin() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-16 anim-in [animation-delay:200ms]">
-        <Stat icon={DollarSign} label="Projected Revenue" value={`Rs ${projectedRevenue.toLocaleString()}`} hint="Confirmed Quotes" accent />
+        <Stat icon={CreditCard} label="Projected Revenue" value={`Rs ${projectedRevenue.toLocaleString()}`} hint="Confirmed Quotes" accent />
         <Stat icon={Car} label="Active Jobs" value={inGarage} hint="Vehicles in bay" />
         <Stat icon={Clock} label="Pending Intake" value={pendingCount} hint="Awaiting vetting" />
         <QrKioskCard />

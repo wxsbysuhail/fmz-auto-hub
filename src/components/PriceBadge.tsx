@@ -1,4 +1,3 @@
-import { Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PriceBadgeProps {
@@ -10,13 +9,13 @@ interface PriceBadgeProps {
 export function PriceBadge({ amount, label, className }: PriceBadgeProps) {
   return (
     <div className={cn("inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-primary border border-primary/20", className)}>
-      <Tag className="h-3 w-3" />
       <div className="flex flex-col leading-tight">
         {label && <span className="text-[9px] uppercase tracking-wider font-bold opacity-70">{label}</span>}
         <span className="text-sm font-semibold tracking-tight">
-          Est. ${amount.toLocaleString()}
+          Rs {amount.toLocaleString()}
         </span>
       </div>
     </div>
   );
 }
+
