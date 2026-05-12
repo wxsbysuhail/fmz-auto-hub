@@ -50,37 +50,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FMZ Auto — Premium Workshop Management" },
-      { name: "description", content: "FMZ Auto: book service, track repairs in real time, and manage your auto workshop with a beautifully simple dashboard." },
-      { property: "og:title", content: "FMZ Auto" },
-      { property: "og:description", content: "Premium auto workshop management platform." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-    links: [{ rel: "stylesheet", href: appCss }],
-  }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head><HeadContent /></head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -88,13 +61,16 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <I18nProvider>
-          <NavBar />
-          <div className="pt-24">
-            <Outlet />
+          <div className="min-h-screen bg-background font-sans antialiased">
+            <NavBar />
+            <main className="pt-24">
+              <Outlet />
+            </main>
+            <Toaster position="top-center" />
           </div>
-          <Toaster position="top-center" />
         </I18nProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
 }
+
