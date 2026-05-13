@@ -54,7 +54,7 @@ function Stat({ icon: Icon, label, value, hint, accent }: any) {
       <div className="flex items-center justify-between relative z-10">
         <div className="flex flex-col gap-1">
           <span className={cn(
-            "text-[10px] font-bold uppercase tracking-[0.2em]", 
+            "text-[9px] sm:text-[10px] font-bold uppercase tracking-widest sm:tracking-[0.2em] whitespace-normal max-w-[140px]", 
             accent ? "text-background/50" : "text-muted-foreground/60"
           )}>
             {label}
@@ -1167,8 +1167,8 @@ function Admin() {
       </div>
 
       <Tabs defaultValue="kanban" className="anim-in [animation-delay:300ms]">
-        <div className="mb-10 flex justify-center">
-          <TabsList className="h-14 p-1.5 bg-secondary/50 backdrop-blur-xl rounded-full border border-border/40 flex items-center min-w-fit">
+        <div className="mb-10 flex justify-start sm:justify-center -mx-4 px-4 overflow-hidden">
+          <TabsList className="h-14 p-1.5 bg-secondary/50 backdrop-blur-xl rounded-full border border-border/40 flex items-center overflow-x-auto modern-scrollbar max-w-full">
             <TabsTrigger value="kanban" className="rounded-full px-6 py-2.5 flex gap-2.5 items-center data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all">
               <ListChecks className="h-4 w-4" /> 
               <span className="text-[10px] font-bold uppercase tracking-widest">Kanban Board</span>
