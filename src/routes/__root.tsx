@@ -5,8 +5,8 @@ import {
   createRootRouteWithContext,
   useRouter,
   useRouterState,
-  HeadContent,
-  Scripts,
+  Meta,
+  Links,
 } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { Wrench } from "lucide-react";
@@ -50,6 +50,37 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  head: () => ({
+    meta: [
+      {
+        title: "FMZ Auto — Studio-Grade Workshop Management",
+      },
+      {
+        name: "description",
+        content: "Experience the future of automotive service. Book, track, and manage repairs with cinematic precision.",
+      },
+      {
+        property: "og:title",
+        content: "FMZ Auto Workshop OS",
+      },
+      {
+        property: "og:description",
+        content: "The studio-grade operating system for modern workshops. Built for precision and transparency.",
+      },
+      {
+        property: "og:image",
+        content: "/readme-hero.png",
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
+      {
+        name: "theme-color",
+        content: "#0a0a0a",
+      },
+    ],
+  }),
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
@@ -61,6 +92,8 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <I18nProvider>
+          <Meta />
+          <Links />
           <div className="min-h-screen bg-background font-sans antialiased">
             <NavBar />
             <main className="pt-24">
