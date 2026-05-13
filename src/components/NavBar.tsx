@@ -69,16 +69,35 @@ export function NavBar() {
       </div>
 
       {/* 2026 Mobile Dynamic Island Pill */}
-      <div className="fixed top-6 left-0 right-0 z-50 flex md:hidden justify-center px-4 pointer-events-none">
-        <div className="pointer-events-auto h-10 px-6 rounded-full bg-black/80 backdrop-blur-2xl border border-white/10 shadow-2xl flex items-center gap-3 anim-in slide-in-from-top-4">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--color-primary)]" />
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/90">{AppConfig.brand.name}</span>
-          {isAdmin && (
-            <>
-              <div className="h-3 w-px bg-white/10 mx-1" />
+      <div className="fixed top-6 left-0 right-0 z-50 flex md:hidden justify-center px-6 pointer-events-none">
+        <div className="pointer-events-auto h-11 px-4 rounded-full bg-black/90 backdrop-blur-3xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-4 anim-in slide-in-from-top-4 min-w-[220px]">
+          
+          {/* Column 1: Brand Logo */}
+          <div className="flex-1 flex justify-start">
+            <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
+              <Wrench className="h-3.5 w-3.5 text-primary-foreground" />
+            </div>
+          </div>
+
+          {/* Column 2: Center Text */}
+          <div className="flex-[2] flex justify-center whitespace-nowrap">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white leading-none">{AppConfig.brand.name}</span>
+          </div>
+
+          {/* Column 3: Contextual Action/Status */}
+          <div className="flex-1 flex justify-end">
+            {isAdmin ? (
               <NotificationHub />
-            </>
-          )}
+            ) : (
+              <div className="relative flex h-2 w-2 mr-2">
+                <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-40"></div>
+                <div className="relative inline-flex rounded-full h-2 w-2 bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]"></div>
+              </div>
+            )}
+          </div>
+
+          {/* Liquid Reflection Glow */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
         </div>
       </div>
 

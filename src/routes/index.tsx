@@ -16,7 +16,7 @@ function Home() {
   return (
     <main className="min-h-[calc(100vh-3.5rem)] overflow-hidden bg-background">
       {/* Cinematic Hero Section */}
-      <section className="relative pt-16 pb-20 sm:pt-40 sm:pb-56">
+      <section className="relative pt-4 pb-20 sm:pt-40 sm:pb-56">
         {/* Animated Background Depth */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl aspect-square bg-primary/5 blur-[160px] rounded-full animate-pulse" />

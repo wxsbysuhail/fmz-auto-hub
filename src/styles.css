@@ -116,7 +116,15 @@
   * {
     border-color: var(--color-border);
   }
-  html, body {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
@@ -124,6 +132,12 @@
     text-rendering: optimizeLegibility;
     font-feature-settings: "ss01", "cv11";
   }
+
+  #root {
+    width: 100vw;
+    overflow-x: hidden;
+  }
+  
   ::selection {
     background: color-mix(in oklab, var(--primary) 20%, transparent);
   }

@@ -94,7 +94,7 @@ function RootComponent() {
         <I18nProvider>
           <div className="min-h-screen bg-background font-sans antialiased">
             <NavBar />
-            <main className="pt-24 pb-64">
+            <main className="pt-12 md:pt-24 pb-64">
               <Outlet />
             </main>
             <Toaster position="top-center" />
@@ -102,7 +102,7 @@ function RootComponent() {
             <Toaster position="top-center" />
             
             {/* 2026 Floating Signature Pill */}
-            <div className="fixed bottom-24 md:bottom-8 left-0 right-0 z-40 flex justify-center px-4 pointer-events-none">
+            <div className="fixed bottom-36 md:bottom-8 left-0 right-0 z-40 flex justify-center px-4 pointer-events-none">
               <div className="pointer-events-auto flex flex-col items-center gap-1 scale-90 md:scale-100">
                 <div className="glass-premium flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.4)] backdrop-blur-3xl animate-in slide-in-from-bottom-4 duration-1000">
                   <div className="relative flex items-center gap-2 pr-4 border-r border-white/10">
