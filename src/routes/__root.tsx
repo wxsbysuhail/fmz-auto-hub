@@ -94,7 +94,7 @@ function RootComponent() {
         <I18nProvider>
           <div className="min-h-screen bg-background font-sans antialiased">
             <NavBar />
-            <main className="pt-12 md:pt-24 pb-64">
+            <main className="pt-12 md:pt-12 pb-64">
               <Outlet />
             </main>
             <Toaster position="top-center" />

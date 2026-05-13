@@ -16,7 +16,7 @@ function Home() {
   return (
     <main className="min-h-[calc(100vh-3.5rem)] overflow-hidden bg-background">
       {/* Cinematic Hero Section */}
-      <section className="relative pt-4 pb-20 sm:pt-40 sm:pb-56">
+      <section className="relative pt-4 pb-20 sm:pt-20 sm:pb-56">
         {/* Animated Background Depth */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl aspect-square bg-primary/5 blur-[160px] rounded-full animate-pulse" />
@@ -26,7 +26,7 @@ function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center text-center">
             {/* Integrated Visual Prototype Signature */}
-            <div className="mt-12 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-xl shadow-lg anim-in">
+            <div className="mt-8 md:mt-4 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-xl shadow-lg anim-in">
               <div className="relative flex items-center gap-2 pr-4 border-r border-primary/10">
                 <div className="relative flex h-2 w-2">
                   <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></div>
