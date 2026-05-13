@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Wrench, ChevronRight, Circle, Home, Calendar, Search, Shield, Bell, Sun, Moon } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { useTheme } from "@/lib/theme-provider";
+import { useTheme } from "@/lib/theme";
 import { TopControls } from "./TopControls";
 import { NotificationHub } from "./NotificationHub";
 import { cn } from "@/lib/utils";
