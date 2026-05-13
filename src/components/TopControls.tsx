@@ -13,7 +13,7 @@ export function TopControls() {
   const { theme, toggle } = useTheme();
   return (
     <div className="flex items-center gap-2">
-      <div className="inline-flex rounded-full border bg-background/60 p-0.5 text-xs">
+      <div className="hidden md:inline-flex rounded-full border bg-background/60 p-0.5 text-xs">
         {LANGS.map((l) => (
           <button
             key={l.id}

@@ -99,19 +99,28 @@ function RootComponent() {
             </main>
             <Toaster position="top-center" />
             
-            {/* Architect Signature & Prototype Notice */}
-            <footer className="mt-auto py-12 flex justify-center px-4 w-full">
-              <div className="glass flex flex-col md:flex-row items-center gap-2 md:gap-3 rounded-2xl md:rounded-full border border-white/10 px-3 md:px-4 py-1.5 md:py-2 text-[8px] md:text-[10px] font-medium tracking-widest uppercase text-muted-foreground shadow-2xl backdrop-blur-xl animate-in text-center md:text-left">
-                <div className="flex items-center gap-1.5 md:border-r border-white/10 md:pr-3">
-                  <div className="h-1 w-1 animate-pulse rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
-                  <span>Visual Prototype</span>
+            <Toaster position="top-center" />
+            
+            {/* 2026 Floating Signature Pill */}
+            <div className="fixed bottom-24 md:bottom-8 left-0 right-0 z-40 flex justify-center px-4 pointer-events-none">
+              <div className="pointer-events-auto flex flex-col items-center gap-1 scale-90 md:scale-100">
+                <div className="glass-premium flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.4)] backdrop-blur-3xl animate-in slide-in-from-bottom-4 duration-1000">
+                  <div className="relative flex items-center gap-2 pr-4 border-r border-white/10">
+                    <div className="relative flex h-2 w-2">
+                      <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></div>
+                      <div className="relative inline-flex rounded-full h-2 w-2 bg-primary shadow-[0_0_10px_var(--color-primary)]"></div>
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-foreground/90">Visual Prototype</span>
+                  </div>
+                  <div className="flex flex-col items-start leading-none gap-0.5">
+                    <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-[0.1em]">Designed & Engineered by</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-primary/80">{AppConfig.brand.engineeredBy}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 opacity-80">
-                  <span className="font-mono text-[7px] md:text-[9px] opacity-50 hidden xs:inline">DESIGNED & ENGINEERED BY</span>
-                  <span className="text-foreground">{AppConfig.brand.engineeredBy}</span>
-                </div>
+                {/* Visual Depth Glow */}
+                <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary/20 to-transparent blur-sm" />
               </div>
-            </footer>
+            </div>
           </div>
         </I18nProvider>
       </ThemeProvider>
