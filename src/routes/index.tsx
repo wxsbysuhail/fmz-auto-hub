@@ -25,8 +25,19 @@ function Home() {
         
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-primary anim-in">
-              <Sparkles className="h-3 w-3" /> System Activation · v2.0.26
+            {/* Integrated Visual Prototype Signature */}
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-xl shadow-lg anim-in">
+              <div className="relative flex items-center gap-2 pr-4 border-r border-primary/10">
+                <div className="relative flex h-2 w-2">
+                  <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></div>
+                  <div className="relative inline-flex rounded-full h-2 w-2 bg-primary shadow-[0_0_10px_var(--color-primary)]"></div>
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-foreground/90">Visual Prototype</span>
+              </div>
+              <div className="flex flex-col items-start leading-none gap-0.5">
+                <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-[0.1em]">Designed & Engineered by</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary/80">{AppConfig.brand.engineeredBy}</span>
+              </div>
             </div>
             
             <h1 className="mt-8 md:mt-10 text-balance text-4xl sm:text-7xl md:text-9xl font-bold tracking-tighter leading-[0.9] md:leading-[0.85] anim-in [animation-delay:200ms]">
