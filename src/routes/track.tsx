@@ -73,27 +73,27 @@ function Track() {
         onSubmit={(e) => { e.preventDefault(); if (plate.trim()) lookup(plate.trim()); }}
         className="relative group anim-in"
       >
-        <div className="relative flex gap-3 p-2 rounded-[2.5rem] border border-border/40 bg-secondary/5 backdrop-blur-xl focus-within:border-primary/40 focus-within:bg-secondary/10 transition-all duration-500 shadow-2xl shadow-black/5">
+        <div className="relative flex gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-[1.5rem] sm:rounded-[2.5rem] border border-border/40 bg-secondary/5 backdrop-blur-xl focus-within:border-primary/40 focus-within:bg-secondary/10 transition-all duration-500 shadow-2xl shadow-black/5">
           <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/40" />
+            <Search className="pointer-events-none absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-muted-foreground/40" />
             <Input
               value={plate}
               onChange={(e) => setPlate(e.target.value.toUpperCase())}
               placeholder={t("track.placeholder")}
-              className="pl-14 h-14 bg-transparent border-none rounded-full uppercase tracking-[0.2em] font-mono text-lg focus-visible:ring-0 placeholder:text-muted-foreground/20"
+              className="pl-10 sm:pl-14 h-11 sm:h-14 bg-transparent border-none rounded-full uppercase tracking-[0.1em] sm:tracking-[0.2em] font-mono text-sm sm:text-lg focus-visible:ring-0 placeholder:text-muted-foreground/20"
             />
           </div>
-          <div className="flex items-center gap-2 pr-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 pr-1 sm:pr-2">
             <HoldToSpeak
               onCapture={(s) => setPlate(s.toUpperCase().replace(/[^A-Z0-9-]/g, ""))}
               samples={{ en: ["AZ-918-PR", "EV-3-SF"], fr: ["AZ-918-PR", "C-63-AMG"], kr: ["AZ-918-PR", "TYPE-R"] }}
             />
             <Button 
               type="submit" 
-              className="h-14 px-8 rounded-full bg-primary text-white hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 disabled:opacity-50" 
+              className="h-11 sm:h-14 px-5 sm:px-8 rounded-full bg-primary text-white hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 disabled:opacity-50 text-xs sm:text-sm" 
               disabled={!plate.trim() || loading}
             >
-              {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : t("track.action")}
+              {loading ? <Loader2 className="h-4 sm:h-5 w-4 sm:w-5 animate-spin" /> : t("track.action")}
             </Button>
           </div>
         </div>

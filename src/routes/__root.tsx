@@ -5,8 +5,6 @@ import {
   createRootRouteWithContext,
   useRouter,
   useRouterState,
-  Meta,
-  Links,
 } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { Wrench } from "lucide-react";
@@ -49,27 +47,29 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+import { AppConfig } from "@/app.config";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       {
-        title: "FMZ Auto — Studio-Grade Workshop Management",
+        title: AppConfig.seo.title,
       },
       {
         name: "description",
-        content: "Experience the future of automotive service. Book, track, and manage repairs with cinematic precision.",
+        content: AppConfig.seo.description,
       },
       {
         property: "og:title",
-        content: "FMZ Auto Workshop OS",
+        content: AppConfig.seo.ogTitle,
       },
       {
         property: "og:description",
-        content: "The studio-grade operating system for modern workshops. Built for precision and transparency.",
+        content: AppConfig.seo.ogDescription,
       },
       {
         property: "og:image",
-        content: "/readme-hero.png",
+        content: AppConfig.seo.ogImage,
       },
       {
         name: "twitter:card",
@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         name: "theme-color",
-        content: "#0a0a0a",
+        content: AppConfig.seo.themeColor,
       },
     ],
   }),
@@ -92,28 +92,26 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <I18nProvider>
-          <Meta />
-          <Links />
           <div className="min-h-screen bg-background font-sans antialiased">
             <NavBar />
-            <main className="pt-24">
+            <main className="pt-24 pb-64">
               <Outlet />
             </main>
             <Toaster position="top-center" />
             
             {/* Architect Signature & Prototype Notice */}
-            <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 px-4 w-full max-w-fit pointer-events-none">
-              <div className="glass flex items-center gap-3 rounded-full border border-white/10 px-4 py-2 text-[10px] font-medium tracking-widest uppercase text-muted-foreground shadow-2xl backdrop-blur-xl animate-in pointer-events-auto">
-                <div className="flex items-center gap-1.5 border-r border-white/10 pr-3">
+            <footer className="mt-auto py-12 flex justify-center px-4 w-full">
+              <div className="glass flex flex-col md:flex-row items-center gap-2 md:gap-3 rounded-2xl md:rounded-full border border-white/10 px-3 md:px-4 py-1.5 md:py-2 text-[8px] md:text-[10px] font-medium tracking-widest uppercase text-muted-foreground shadow-2xl backdrop-blur-xl animate-in text-center md:text-left">
+                <div className="flex items-center gap-1.5 md:border-r border-white/10 md:pr-3">
                   <div className="h-1 w-1 animate-pulse rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
                   <span>Visual Prototype</span>
                 </div>
                 <div className="flex items-center gap-1 opacity-80">
-                  <span className="font-mono text-[9px] opacity-50">DESIGNED & ENGINEERED BY</span>
-                  <span className="text-foreground">Suhail Wohedally</span>
+                  <span className="font-mono text-[7px] md:text-[9px] opacity-50 hidden xs:inline">DESIGNED & ENGINEERED BY</span>
+                  <span className="text-foreground">{AppConfig.brand.engineeredBy}</span>
                 </div>
               </div>
-            </div>
+            </footer>
           </div>
         </I18nProvider>
       </ThemeProvider>

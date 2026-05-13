@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Calendar, Activity, LayoutDashboard, ShieldCheck, Clock, Sparkles } from "lucide-react";
+import { AppConfig } from "@/app.config";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FMZ Auto — Book, Track, Manage" },
-      { name: "description", content: "A premium, minimalist platform for booking auto service and tracking repairs in real time." },
+      { title: AppConfig.seo.title },
+      { name: "description", content: AppConfig.seo.description },
     ],
   }),
   component: Home,
@@ -15,7 +16,7 @@ function Home() {
   return (
     <main className="min-h-[calc(100vh-3.5rem)] overflow-hidden bg-background">
       {/* Cinematic Hero Section */}
-      <section className="relative pt-24 pb-32 sm:pt-40 sm:pb-56">
+      <section className="relative pt-16 pb-20 sm:pt-40 sm:pb-56">
         {/* Animated Background Depth */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl aspect-square bg-primary/5 blur-[160px] rounded-full animate-pulse" />
@@ -24,48 +25,48 @@ function Home() {
         
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-primary anim-in">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-primary anim-in">
               <Sparkles className="h-3 w-3" /> System Activation · v2.0.26
             </div>
             
-            <h1 className="mt-10 text-balance text-6xl sm:text-9xl font-bold tracking-tighter leading-[0.85] anim-in [animation-delay:200ms]">
-              Automotive <br />
-              <span className="text-glow opacity-90 text-primary">Excellence.</span>
+            <h1 className="mt-8 md:mt-10 text-balance text-4xl sm:text-7xl md:text-9xl font-bold tracking-tighter leading-[0.9] md:leading-[0.85] anim-in [animation-delay:200ms]">
+              {AppConfig.hero.titleTop} <br />
+              <span className="text-glow opacity-90 text-primary">{AppConfig.hero.titleAccent}</span>
             </h1>
             
-            <p className="mx-auto mt-10 max-w-2xl text-balance text-lg sm:text-2xl text-muted-foreground/80 font-light leading-relaxed anim-in [animation-delay:400ms]">
-              The studio-grade OS for the modern workshop. Book in seconds, track with precision, and experience service without friction.
+            <p className="mx-auto mt-6 md:mt-10 max-w-2xl text-balance text-base sm:text-xl md:text-2xl text-muted-foreground/80 font-light leading-relaxed anim-in [animation-delay:400ms]">
+              {AppConfig.hero.subtext}
             </p>
 
-            <div className="mt-14 flex flex-wrap items-center justify-center gap-5 anim-in [animation-delay:600ms]">
+            <div className="mt-10 md:mt-14 flex flex-wrap items-center justify-center gap-4 md:gap-5 anim-in [animation-delay:600ms]">
               <Link
                 to="/book"
-                className="group relative inline-flex items-center gap-3 rounded-full bg-foreground px-10 py-5 text-sm font-bold text-background transition-all hover:scale-105 active:scale-95 shadow-2xl hover:shadow-[0_0_40px_rgba(var(--primary),0.3)]"
+                className="group relative inline-flex items-center gap-2 md:gap-3 rounded-full bg-foreground px-6 md:px-10 py-3 md:py-5 text-xs md:text-sm font-bold text-background transition-all hover:scale-105 active:scale-95 shadow-2xl hover:shadow-[0_0_40px_rgba(var(--primary),0.3)]"
               >
-                Start Your Intake <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                {AppConfig.hero.ctaPrimary} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 to="/track"
-                className="rounded-full border border-border/40 bg-background/40 backdrop-blur-2xl px-10 py-5 text-sm font-bold transition-all hover:bg-secondary/50 hover:border-border/80"
+                className="rounded-full border border-border/40 bg-background/40 backdrop-blur-2xl px-6 md:px-10 py-3 md:py-5 text-xs md:text-sm font-bold transition-all hover:bg-secondary/50 hover:border-border/80"
               >
-                Track Live Status
+                {AppConfig.hero.ctaSecondary}
               </Link>
             </div>
           </div>
 
           {/* Hero Visual */}
-          <div className="mt-20 relative anim-in [animation-delay:800ms] group">
-            <div className="relative rounded-[2.5rem] overflow-hidden border border-border/40 bg-card shadow-2xl">
+          <div className="mt-16 md:mt-20 relative anim-in [animation-delay:800ms] group">
+            <div className="relative rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-border/40 bg-card shadow-2xl">
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10 pointer-events-none" />
               <img 
                 src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=2070&auto=format&fit=crop" 
                 alt="Premium Workshop" 
-                className="w-full aspect-[21/9] object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000"
+                className="w-full aspect-video md:aspect-[21/9] object-cover opacity-60 md:opacity-80 group-hover:scale-105 transition-transform duration-1000"
               />
-              <div className="absolute inset-0 grid place-items-center z-20">
-                <div className="p-10 sm:p-14 rounded-[2rem] bg-black/10 backdrop-blur-xl border border-white/10 text-center shadow-2xl">
-                  <div className="text-[10px] font-bold uppercase tracking-[0.4em] mb-4 opacity-60 text-white/80">Engineering Excellence</div>
-                  <div className="text-3xl sm:text-4xl font-light tracking-tight text-white italic leading-tight">
+              <div className="absolute inset-0 grid place-items-center z-20 p-4">
+                <div className="p-6 md:p-14 rounded-[1.5rem] md:rounded-[2rem] bg-black/20 md:bg-black/10 backdrop-blur-xl border border-white/10 text-center shadow-2xl max-w-sm md:max-w-none">
+                  <div className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] mb-2 md:mb-4 opacity-60 text-white/80">Engineering Excellence</div>
+                  <div className="text-xl md:text-4xl font-light tracking-tight text-white italic leading-tight">
                     "Precision in <br /> every turn."
                   </div>
                 </div>
