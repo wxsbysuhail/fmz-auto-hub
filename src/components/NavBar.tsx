@@ -108,5 +108,4 @@ export function NavBar() {
     </>
   );
 }
-  );
-}
+
