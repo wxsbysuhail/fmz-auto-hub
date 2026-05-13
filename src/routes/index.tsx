@@ -26,7 +26,7 @@ function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center text-center">
             {/* Integrated Visual Prototype Signature */}
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-xl shadow-lg anim-in">
+            <div className="mt-12 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-xl shadow-lg anim-in">
               <div className="relative flex items-center gap-2 pr-4 border-r border-primary/10">
                 <div className="relative flex h-2 w-2">
                   <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></div>

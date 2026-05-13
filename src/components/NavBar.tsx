@@ -1,12 +1,14 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Wrench, ChevronRight, Circle, Home, Calendar, Search, Shield, Bell } from "lucide-react";
+import { Wrench, ChevronRight, Circle, Home, Calendar, Search, Shield, Bell, Sun, Moon } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme-provider";
 import { TopControls } from "./TopControls";
 import { NotificationHub } from "./NotificationHub";
 import { cn } from "@/lib/utils";
 import { AppConfig } from "@/app.config";
 
 export function NavBar() {
+  const { theme, setTheme } = useTheme();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { t } = useI18n();
   const isAdmin = path.startsWith("/admin");
@@ -72,9 +74,19 @@ export function NavBar() {
       <div className="fixed top-6 left-0 right-0 z-50 flex md:hidden justify-center px-6 pointer-events-none">
         <div className="pointer-events-auto h-11 px-4 rounded-full bg-black/90 backdrop-blur-3xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-4 anim-in slide-in-from-top-4 min-w-[220px]">
           
-          {/* Column 1: Brand Logo */}
-          <div className="flex-1 flex justify-start">
-            <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
+          {/* Column 1: Brand Logo & Theme Toggle */}
+          <div className="flex-1 flex justify-start items-center gap-3">
+            <button 
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="h-7 w-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-3 w-3 text-yellow-400" />
+              ) : (
+                <Moon className="h-3 w-3 text-blue-400" />
+              )}
+            </button>
+            <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
               <Wrench className="h-3.5 w-3.5 text-primary-foreground" />
             </div>
           </div>
