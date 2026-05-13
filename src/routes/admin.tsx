@@ -1133,8 +1133,6 @@ function QrKioskCard() {
   );
 }
 
-}
-
 function Admin() {
   const { bookings, updateStatus, confirmBooking, setQuote, assignTechnician, setPriority, setEstimatedDays, setDetailedQuote } = useBookings();
   const [selected, setSelected] = useState<Booking | null>(null);
