@@ -67,6 +67,20 @@ function RootComponent() {
               <Outlet />
             </main>
             <Toaster position="top-center" />
+            
+            {/* Architect Signature & Prototype Notice */}
+            <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 px-4 w-full max-w-fit pointer-events-none">
+              <div className="glass flex items-center gap-3 rounded-full border border-white/10 px-4 py-2 text-[10px] font-medium tracking-widest uppercase text-muted-foreground shadow-2xl backdrop-blur-xl animate-in pointer-events-auto">
+                <div className="flex items-center gap-1.5 border-r border-white/10 pr-3">
+                  <div className="h-1 w-1 animate-pulse rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
+                  <span>Visual Prototype</span>
+                </div>
+                <div className="flex items-center gap-1 opacity-80">
+                  <span className="font-mono text-[9px] opacity-50">DESIGNED & ENGINEERED BY</span>
+                  <span className="text-foreground">Suhail Wohedally</span>
+                </div>
+              </div>
+            </div>
           </div>
         </I18nProvider>
       </ThemeProvider>
